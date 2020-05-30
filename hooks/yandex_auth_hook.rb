@@ -13,7 +13,7 @@ response_add_subdomain = Request.new { |r|
     r.data = {
         domain: ENV["CERTBOT_DOMAIN"],
         type: 'TXT',
-        subdomain: SUBDOMAIN,
+        subdomain: "#{SUBDOMAIN}",
         ttl: 90,
         content: ENV["CERTBOT_VALIDATION"]
     }
@@ -30,7 +30,6 @@ if response_add_subdomain['success'] == 'ok'
         result_txt = result.match /#{ENV["CERTBOT_VALIDATION"]}/
 
         if result_txt.to_a[0] == ENV["CERTBOT_VALIDATION"]
-            
             puts "DNS settings applied"
             return
         else

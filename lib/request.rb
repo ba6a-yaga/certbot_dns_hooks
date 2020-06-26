@@ -17,8 +17,12 @@ class Request
         when :post then
             Net::HTTP.start(self.uri.host, self.uri.port, :use_ssl => self.uri.scheme == 'https') do |http|
                 query = Net::HTTP::Post.new self.uri
-                query.set_form_data(self.data) unless self.data.nil?
                 add_headers query
+                if query.content_type == 'application/json'
+                    query.body = self.data.to_json
+                else
+                    query.set_form_data(self.data) unless self.data.nil?
+                end
                 response(http.request query)
             end
         when :get then
@@ -27,6 +31,12 @@ class Request
                 add_headers query
                 response(http.request query)
             end  
+        when :delete then
+            Net::HTTP.start(self.uri.host, self.uri.port, :use_ssl => self.uri.scheme == 'https') do |http|
+                query = Net::HTTP::Delete.new self.uri
+                add_headers query
+                response(http.request query)
+            end 
         end 
     end
 

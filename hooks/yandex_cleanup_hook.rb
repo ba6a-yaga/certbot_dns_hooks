@@ -8,7 +8,7 @@ record_id = File.read("#{path}/#{SUBDOMAIN}_RECORD_ID")
 
 response_del_subdomain = Request.new { |r|
     r.headers = {
-        PddToken: ENV["PddToken"]
+        PddToken: ENV["Token"]
     }
     r.uri = "https://pddimp.yandex.ru/api2/admin/dns/del"
     r.method = :post

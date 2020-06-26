@@ -6,7 +6,7 @@ SUBDOMAIN = ENV["SUBDOMAIN"].nil? ? "_acme-challenge" : ENV["SUBDOMAIN"]
 
 response_add_subdomain = Request.new { |r|
     r.headers = {
-        PddToken: ENV["PddToken"]
+        PddToken: ENV["Token"]
     }
     r.uri = "https://pddimp.yandex.ru/api2/admin/dns/add"
     r.method = :post

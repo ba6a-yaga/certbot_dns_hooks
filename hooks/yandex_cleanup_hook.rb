@@ -4,7 +4,7 @@ require_relative '/usr/lib/request.rb'
 
 SUBDOMAIN = ENV["SUBDOMAIN"].nil? ? "_acme-challenge" : ENV["SUBDOMAIN"]
 path = "/tmp/#{ENV["CERTBOT_DOMAIN"]}"
-record_id = File.read("#{path}/#{SUBDOMAIN}_RECORD_ID")
+record_id = File.read("#{path}/#{SUBDOMAIN}_RECORD_ID").strip
 
 response_del_subdomain = Request.new { |r|
     r.headers = {

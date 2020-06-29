@@ -8,8 +8,8 @@ unless Dir.exist? path
     return
 end
 
-record_id = File.read("#{path}/#{SUBDOMAIN}_RECORD_ID")
-zone_id = File.read("#{path}/#{SUBDOMAIN}_ZONE_ID")
+record_id = File.read("#{path}/#{SUBDOMAIN}_RECORD_ID").strip
+zone_id = File.read("#{path}/#{SUBDOMAIN}_ZONE_ID").strip
 
 response_del_subdomain = Request.new { |r|
     r.headers = {
@@ -20,7 +20,7 @@ response_del_subdomain = Request.new { |r|
     r.method = :delete
 }.fetch
 
-if response_del_subdomain['success'] == 'true'
+if response_del_subdomain['success']
     puts "Domain successfully removed" 
     #TODO: добавить удаление файлов
 else

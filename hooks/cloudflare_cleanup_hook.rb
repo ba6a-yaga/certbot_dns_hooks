@@ -2,6 +2,8 @@
 
 require_relative '/usr/lib/request.rb'
 
+domains = ENV["CERTBOT_DOMAIN"].split('.')
+subdomains = domains.reject { |d| d == domains.last or domains[domains.size-2] == d }.join('.')
 SUBDOMAIN = ENV["SUBDOMAIN"].nil? ? "_acme-challenge" : ENV["SUBDOMAIN"]
 path = "/tmp/#{ENV["CERTBOT_DOMAIN"]}"
 unless Dir.exist? path 

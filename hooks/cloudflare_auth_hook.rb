@@ -2,8 +2,9 @@
 
 require_relative '/usr/lib/request.rb' 
 
-SUBDOMAIN = ENV["SUBDOMAIN"].nil? ? "_acme-challenge" : ENV["SUBDOMAIN"]
 domains = ENV["CERTBOT_DOMAIN"].split('.')
+subdomains = domains.reject { |d| d == domains.last or domains[domains.size-2] == d }.join('.')
+SUBDOMAIN = "#{ENV["SUBDOMAIN"].nil? ? "_acme-challenge" : ENV["SUBDOMAIN"]}.#{subdomains}"
 main_domain = "#{domains[domains.size-2]}.#{domains[domains.size-1]}"
 response_get_id_zone = Request.new { |r|
     r.headers = {
@@ -41,7 +42,8 @@ if response_get_id_zone['success']
         File.open("#{path}/#{SUBDOMAIN}_ZONE_ID", 'w+') { |f| f.puts response_get_id_zone['result'][0]['id']}
     
         120.times do
-            result = `host -t TXT #{SUBDOMAIN}.#{ENV["CERTBOT_DOMAIN"]}`
+            puts "Checking challenge #{SUBDOMAIN}.#{main_domain}"
+            result = `host -t TXT #{SUBDOMAIN}.#{main_domain}`
             result_txt = result.match /#{ENV["CERTBOT_VALIDATION"]}/
     
             if result_txt.to_a[0] == ENV["CERTBOT_VALIDATION"]

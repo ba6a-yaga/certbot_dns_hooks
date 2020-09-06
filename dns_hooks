@@ -1,11 +1,17 @@
 #!/usr/bin/env ruby
 
-puts ENV['PLUGIN']
+dry_run = '--dry-run' if ENV['TEST'] == 'true'
 
 if ENV['PLUGIN'] == 'certonly'
-    dry_run = '--dry-run' if ENV['TEST'] == 'true'
     domains = ENV['DOMAINS'].split.map { |d| "-d #{d}" }.join(' ')
     cmd = "certbot certonly #{dry_run} --non-interactive --manual-public-ip-logging-ok --agree-tos --email #{ENV['EMAIL']} --renew-by-default --manual --preferred-challenges=dns --manual-auth-hook /opt/certboot-hooks/#{ENV['PROVIDER']}_auth_hook.rb --manual-cleanup-hook /opt/certboot-hooks/#{ENV['PROVIDER']}_cleanup_hook.rb #{domains}"
+end
+
+if ENV['PLUGIN'] == 'renew'
+    cmd = "certbot renew #{dry_run}"
+end
+
+if cmd.length.positive?
     puts cmd
     IO.popen(cmd) { |o|
         puts o.gets

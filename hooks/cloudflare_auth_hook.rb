@@ -4,7 +4,7 @@ require_relative '/usr/lib/request.rb'
 
 domains = ENV["CERTBOT_DOMAIN"].split('.')
 subdomains = domains.reject { |d| d == domains.last or domains[domains.size-2] == d }.join('.')
-SUBDOMAIN = "#{ENV["SUBDOMAIN"].nil? ? "_acme-challenge" : ENV["SUBDOMAIN"]}.#{subdomains}"
+SUBDOMAIN = subdomains.length.zero? ? "_acme-challenge" : subdomains
 main_domain = "#{domains[domains.size-2]}.#{domains[domains.size-1]}"
 response_get_id_zone = Request.new { |r|
     r.headers = {
